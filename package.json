@@ -1,0 +1,12 @@
+{
+  "name": "cross-stitch-texturizer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "run": "node index.js"
+  },
+  "dependencies": {
+    "gm": "^1.25.0"
+  }
+}
