@@ -1,9 +1,10 @@
 const fs = require('fs');
 var gm = require('gm').subClass({ imageMagick: '7+' });
 
-let dimensions = [0,0]
-let gridSize = [158,159]
-let cellSize = 0
+let dimensions = [0,0];
+let gridSize = [158,159];
+let cellSize = 0;
+let border = [20,20];
 
 
 
@@ -28,6 +29,14 @@ if (!err) {
             if(!err) {
                 console.log("Written texture base.");
                 textureRow();
+            }
+        });
+    
+        gm('temp/aida-base.jpg')
+        .resize(cellSize)
+        .write('temp/aida-base.png', function(err) {
+            if(!err) {
+                console.log("Written aida base.");
             }
         });
 } else {
@@ -87,12 +96,83 @@ const composeTogether = () => {
                         if(err){
                             console.log(err)
                         } else {
-                            console.log("Success!");
+                            console.log("Alpha Written!");
+                        }
+                    });
+
+                gm()
+                    .command("composite")
+                    .compose("CopyOpacity")
+                    .in('input/file2.png', 'temp/fullImg.png', "-matte")
+                    .write('temp/foreground.png', function(err){
+                        if(err){
+                            console.log(err)
+                        } else {
+                            console.log("Alpha Temp Written.");
+                            aidaRow();
                         }
                     });
 
             }
             else{console.log(err)}
+        });
+}
+
+
+// AIDA BACKGROUND
+
+const aidaRow = () => {
+    let g = gm('temp/aida-base.png');
+    for (let x = 1; x<gridSize[0]+border[0] ;x++) {
+        g.append('temp/aida-base.png', true);
+    }
+
+    g.write('temp/aida-row.png', function(err) {
+        if(!err) {
+            console.log("Written AIDA row.");
+            aidaFull()
+        } else {
+            console.log(err)
+        }
+    });
+};
+
+const aidaFull = () => {
+    let r = gm('temp/aida-row.png');
+
+    for (let y = 1; y<gridSize[1] + border[1]; y++) {
+        r.append('temp/aida-row.png');
+    }
+
+    r.write('final/background-aida.png', function(err) {
+        if(!err) {
+        }
+        else{console.log(err)}
+    });
+
+    r.write('temp/aida-full.png', function(err) {
+        if(!err) {
+            console.log("Written aida image.")
+            composeAida();
+        }
+        else{console.log(err)}
+    });
+}
+
+const composeAida = () => { //get background and foreground img, center in background and composite together into single img
+    let background = 'temp/aida-full.png'
+    let foreground = 'temp/foreground.png'
+
+    gm()
+        .command("composite")
+        .geometry(`+${border[0]*(cellSize/2)}+${border[1]*(cellSize/2)}`)
+        .in(foreground, background, "-matte")
+        .write('final/full-composite-image.png', function(err){
+            if(err){
+                console.log(err)
+            } else {
+                console.log("Great Success!");
+            }
         });
 }
 
