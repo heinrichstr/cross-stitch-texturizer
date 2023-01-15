@@ -5,7 +5,7 @@ let dimensions = [0,0];
 let gridSize = [158,159];
 let cellSize = 0;
 let border = [20,20];
-
+let backgroundColor = '#a9c4b6'
 
 
 //get pixelart file (alpha on empty)
@@ -123,6 +123,7 @@ const composeTogether = () => {
 
 const aidaRow = () => {
     let g = gm('temp/aida-base.png');
+
     for (let x = 1; x<gridSize[0]+border[0] ;x++) {
         g.append('temp/aida-base.png', true);
     }
@@ -140,27 +141,60 @@ const aidaRow = () => {
 const aidaFull = () => {
     let r = gm('temp/aida-row.png');
 
+    const writeBg = () => {
+        gm('temp/aida-full.png')
+            .size(function (err, size) {
+                if (!err) {
+                    gm(size.width, size.height, backgroundColor)
+                        .write("temp/colorbg.png", function (err) {
+                            if (err) console.log(err)
+                            else {
+                                console.log('wrote color background');
+                                compositeBg()
+                            }
+                        });
+                } else {
+                    console.log(err);
+                }
+            });
+    }
+
+    const compositeBg = () => {
+        gm()
+            .command("composite")
+            .in('-compose', 'Multiply')
+            .in( "temp/colorbg.png" )
+            .in( 'temp/aida-full.png' )
+            .write('temp/colorBgAida.png', function(err) {
+                if (err) console.log(err)
+                else composeAida()
+            });
+    }
+
+
+
     for (let y = 1; y<gridSize[1] + border[1]; y++) {
         r.append('temp/aida-row.png');
     }
+
+    r.write('temp/aida-full.png', function(err) {
+        if(!err) {
+            console.log("Written aida image.")
+            writeBg();
+            
+        }
+        else{console.log(err)}
+    });
 
     r.write('final/background-aida.png', function(err) {
         if(!err) {
         }
         else{console.log(err)}
     });
-
-    r.write('temp/aida-full.png', function(err) {
-        if(!err) {
-            console.log("Written aida image.")
-            composeAida();
-        }
-        else{console.log(err)}
-    });
 }
 
 const composeAida = () => { //get background and foreground img, center in background and composite together into single img
-    let background = 'temp/aida-full.png'
+    let background = 'temp/colorBgAida.png'
     let foreground = 'temp/foreground.png'
 
     gm()
