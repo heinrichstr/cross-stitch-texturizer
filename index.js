@@ -2,15 +2,15 @@ const fs = require('fs');
 var gm = require('gm').subClass({ imageMagick: '7+' });
 
 let dimensions = [0,0];
-let gridSize = [158,159];
+let gridSize = [112,124];
 let cellSize = 0;
 let border = [20,20];
-let backgroundColor = '#a9c4b6'
+let backgroundColor = '#1d1d1d'
 
 
 //get pixelart file (alpha on empty)
 //get pixelart dimensions
-gm('input/file2.png')
+gm('input/file4.png')
 .size(function (err, size) {
 if (!err) {
     dimensions[0] = size.width;
@@ -83,7 +83,7 @@ const composeTogether = () => {
     gm()
         .command("composite")
         .in('-compose', 'Overlay')
-        .in( 'input/file2.png' )
+        .in( 'input/file4.png' )
         .in( 'temp/montage.png')
         .write('temp/fullImg.png', function(err) {
             if(!err) {
@@ -91,7 +91,7 @@ const composeTogether = () => {
                 gm()
                     .command("composite")
                     .compose("CopyOpacity")
-                    .in('input/file2.png', 'temp/fullImg.png', "-matte")
+                    .in('input/file4.png', 'temp/fullImg.png', "-matte")
                     .write('final/outputFile.png', function(err){
                         if(err){
                             console.log(err)
@@ -103,7 +103,7 @@ const composeTogether = () => {
                 gm()
                     .command("composite")
                     .compose("CopyOpacity")
-                    .in('input/file2.png', 'temp/fullImg.png', "-matte")
+                    .in('input/file4.png', 'temp/fullImg.png', "-matte")
                     .write('temp/foreground.png', function(err){
                         if(err){
                             console.log(err)
