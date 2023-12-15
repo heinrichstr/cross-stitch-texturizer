@@ -6,8 +6,26 @@ export default (props) => {
     const { handleSubmit, control } = useForm();
 
     const onSubmit = (data) => {
-        // Handle form submission logic here
-        console.log(data);
+        console.log(JSON.stringify(data));
+
+        const formData = new FormData();
+
+        //create formdata from form entries
+        for (const [key, value] of Object.entries(data)) {
+            formData.append(key, value);
+        }
+
+        fetch(`${window.location.protocol}/api/create_texture`, {
+            method: 'POST',
+            body: formData
+      })
+      .then(response => response.text())
+      .then(data => {
+        console.log('Server response:', data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
     };
 
     return (

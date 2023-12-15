@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import RetexturizerApp from "./app/RetexturizerApp"
+import RetexturizerApp from "./app/RetexturizerApp";
+import Header from './Header';
 
 export default (props) => {
     return (
