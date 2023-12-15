@@ -4,4 +4,39 @@
     padding:20px;
     flex-direction: column;
     align-items: center;
+    max-width:800px;
+
+    section{
+        width:100%;
+        margin-bottom:60px;
+        h2{
+            margin-bottom:20px;
+            color: $darkGreen;
+            font-size:$m-size;
+        }
+        p{
+            margin-bottom:15px;
+        }
+        ol{
+            list-style:decimal;
+            margin-left:20px;
+            li{
+                margin-bottom:15px;
+            }
+        }
+        a{
+            font-size:$l-size;
+            padding:10px;
+            background-color: $darkGreen;
+            border-radius: 3px;
+            color:#fff;
+            font-weight:700;
+            margin-top:20px;
+            display: block;
+            text-align: center;
+            &:hover{
+                background-color:$orange;
+            }
+        }
+    }
 }

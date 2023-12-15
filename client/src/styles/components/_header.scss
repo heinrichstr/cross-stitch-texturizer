@@ -1,0 +1,24 @@
+.header{
+    margin-bottom:60px;
+    
+    h1{
+        color: $darkGreen;
+    }
+
+    div{
+        padding:20px;
+        display:flex;
+        justify-content: center;
+        a{
+            margin-left:15px;
+            margin-right:15px;
+            color:$darkGreen;
+            font-size:$m-size;
+            font-style: italic;
+            &:hover{
+                color:$orange
+            }
+        }
+    }
+    
+}

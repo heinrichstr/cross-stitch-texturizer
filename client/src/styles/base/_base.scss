@@ -49,7 +49,7 @@ sup {
 
 body {
     line-height: 1;
-    background-color: $darkGreen;
+    background-color: $lightGray;
 }
 
 ol,
@@ -66,7 +66,7 @@ ol {
         font-weight: 400;
     }
     li {
-        font-weight: 300;
+        font-weight: 400;
         line-height: 2.2rem;
         font-size: $m-size;
         a {
@@ -90,8 +90,7 @@ html {
 html,
 body,
 #app {
-    height: 100%;
-    z-index:10;
+    z-index:1;
 }
 
 *,
@@ -100,7 +99,7 @@ body,
     box-sizing: inherit;
 }
 
-p {
+p, li {
     font-size: $m-size;
     line-height: 2.2rem;
 }
@@ -118,12 +117,6 @@ h5 {
     font-family: "Roboto Slab", serif;
 }
 /*END RESET*/
-
-.sectionContainer {
-    width: 100%;
-    display: block;
-    position: relative;
-}
 
 a {
     text-decoration: none;
@@ -166,13 +159,9 @@ button:active {
     transform: scale(0.99);
 }
 
-iframe{
-    margin-top:50px;
-}
-
-.ReactModalPortal{
-    iframe{
-        margin-top:0;
-        height:310px;
-    }
+#app{
+    margin:auto;
+    display:flex;
+    justify-content: center;
+    padding:20px;
 }

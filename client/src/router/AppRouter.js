@@ -9,6 +9,7 @@ const LoadingComponent = () => <img src={loadingImg} />;
 //#region import components 
 
 const AsyncHomePage = loadable(() => import('../components/HomePage'))
+const AsyncAppPage = loadable(() => import('../components/AppPage'))
 
 //#endregion
 
@@ -17,7 +18,11 @@ const routerData = [
     {
         path: '/',
         element: <Analytics childElement={<AsyncHomePage/>} />
-    }
+    },
+    {
+        path: '/app',
+        element: <Analytics childElement={<AsyncAppPage/>} />
+    },
 ]
 
 const router = createBrowserRouter(routerData);
