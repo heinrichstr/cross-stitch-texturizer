@@ -1,0 +1,70 @@
+// COLORS
+    $gray: #333;
+    $darkGreen: #255a5a;
+    $darkGreenRgba: rgba(37, 90, 90, .8);
+    $lightGreen: #819997;
+    $orange: #ff6633;
+    $lightGray:#eff7f5;
+
+// SIZING
+
+$s-size: 1.6rem;
+$m-size: 2.0rem;
+$ml-size: 2.4rem;
+$l-size: 3rem;
+$xl-size: 4.8rem;
+$articleSize: 2.2rem;
+$articleSize-l: 3.4rem;
+
+$s-size-mobile: 1.4rem;
+$m-size-mobile: 1.8rem;
+$ml-size-mobile: 2.2rem;
+$l-size-mobile: 2.6rem;
+$xl-size-mobile: 3.4rem;
+$articleSize-mobile: 2rem;
+$articleSize-l-mobile: 3rem;
+
+// Mixins
+
+@mixin transition($duration) {
+    -webkit-transition: $duration ease;
+    -moz-transition: $duration ease;
+    -ms-transition: $duration ease;
+    -o-transition: $duration ease;
+    transition: $duration ease;
+}
+
+@mixin shadow($width, $opacity) {
+    -webkit-box-shadow: 5px 5px 5px $width rgba(23,41,14,$opacity), inset 5px 5px 5px 0px rgba(0,0,0,0);
+    -moz-box-shadow: 5px 5px 5px $width rgba(23,41,14,$opacity), inset 5px 5px 5px 0px rgba(0,0,0,0);
+    box-shadow: 5px 5px 5px $width rgba(23,41,14,$opacity), inset 5px 5px 5px 0px rgba(0,0,0,0);
+}
+
+@mixin innerShadow($width, $opacity) {
+    -webkit-box-shadow: inset 0px 5px 5px $width rgba(23,41,14,$opacity);
+    -moz-box-shadow: inset 0px 5px 5px $width rgba(23,41,14,$opacity);
+    box-shadow: inset 0px 5px 5px $width rgba(23,41,14,$opacity);
+}
+
+@mixin upwardShadow {
+    -webkit-box-shadow: 0px -5px 5px 0px rgba(0,0,0,0.10);
+    -moz-box-shadow: 0px -5px 5px 0px rgba(0,0,0,0.10);
+    box-shadow: 0px -5px 5px 0px rgba(0,0,0,0.10);
+}
+
+@mixin flexColumnSpacing($spacing) {
+    padding: 0 $spacing;
+    &:first-child{
+        padding-left:0;
+    }
+    &:last-child{
+        padding-right:0;
+    }
+}
+
+@mixin transitionGallery{
+    -webkit-animation-duration: 5s;
+    animation-duration: 5s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+}

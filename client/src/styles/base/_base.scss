@@ -1,0 +1,178 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto+Slab:700|Roboto:300&IBM+Plex+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
+/* RESET */
+html,
+body,
+div,
+span,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+em,
+img,
+b,
+u,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+    font-family: 'IBM Plex Serif', serif;
+    color: $gray;
+}
+
+sup {
+    z-index: 0;
+}
+
+body {
+    line-height: 1;
+    background-color: $darkGreen;
+}
+
+ol,
+ul {
+    list-style: none;
+}
+
+ul,
+ol {
+    strong {
+        font-weight: 700;
+    }
+    h3 {
+        font-weight: 400;
+    }
+    li {
+        font-weight: 300;
+        line-height: 2.2rem;
+        font-size: $m-size;
+        a {
+            i {
+                font-weight: 300;
+            }
+        }
+    }
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+html {
+    box-sizing: border-box;
+    font-size: 62.5%; // sets rems to base 10 (e.g. 2.4rem = 24pt on browser default zoom), see settings.css for font sizes
+}
+
+html,
+body,
+#app {
+    height: 100%;
+    z-index:10;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+p {
+    font-size: $m-size;
+    line-height: 2.2rem;
+}
+
+h1 {
+    font-size: $l-size;
+    font-family: "Roboto Slab", serif;
+}
+
+h2,
+h3,
+h4,
+h5 {
+    font-size: $l-size;
+    font-family: "Roboto Slab", serif;
+}
+/*END RESET*/
+
+.sectionContainer {
+    width: 100%;
+    display: block;
+    position: relative;
+}
+
+a {
+    text-decoration: none;
+    color: $orange;
+    &:hover {
+        @include transition(0.25s);
+        color: $darkGreen;
+    }
+}
+
+button {
+    display: inline-block;
+    border: none;
+    padding: 1rem 2rem;
+    margin: 0;
+    text-decoration: none;
+    background: $darkGreen;
+    color: #ffffff;
+    font-family: sans-serif;
+    font-size: $m-size;
+    cursor: pointer;
+    text-align: center;
+    transition: background 250ms ease-in-out, 
+                transform 150ms ease;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+button:hover,
+button:focus {
+    background: $darkGreen;
+}
+
+button:focus {
+    outline: 1px solid $orange;
+    outline-offset: -4px;
+}
+
+button:active {
+    transform: scale(0.99);
+}
+
+iframe{
+    margin-top:50px;
+}
+
+.ReactModalPortal{
+    iframe{
+        margin-top:0;
+        height:310px;
+    }
+}
