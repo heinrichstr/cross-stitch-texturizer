@@ -1,48 +1,148 @@
 const fs = require('fs');
-var gm = require('gm').subClass({ imageMagick: '7+' });
-
-let dimensions = [0,0];
-let gridSize = [112,124];
-let cellSize = 0;
-let border = [20,20];
-let backgroundColor = '#1d1d1d'
+//var gm = require('gm').subClass({ imageMagick: '7+' });
+var gm = require('gm').subClass({ imageMagick: true });
 
 
-//get pixelart file (alpha on empty)
-//get pixelart dimensions
-gm('input/file4.png')
-.size(function (err, size) {
-if (!err) {
-    dimensions[0] = size.width;
-    dimensions[1] = size.height;
-    //get cell size
-    cellSize = dimensions[0] / gridSize[0]
+const textureImg = async (inputGridSize, inputBorderSize, inputBackgroundColor, inputFile) => {
+    
+    let dimensions = [0,0];
+    let gridSize = inputGridSize;
+    let cellSize = 10;
+    let border = inputBorderSize;
+    let backgroundColor = inputBackgroundColor;
 
-    console.log('dimensions:', dimensions);
-    console.log('grid:', gridSize);
-    console.log('cell size:', cellSize);
+    let inputFileBuffer = Buffer.from(inputFile.buffer, 'base64'); //input image buffer from express
+
+    let stitchTextureResized //image buffer resized to cell size
+    let stitchTextureRow
+    let stitchTextureFull
+    let composedImg
+
+    let aidaTextureResized
+    let aidaTextureRow
+    let aidaTextureFull
+
+    let finalImg
+
+    try {
+        //get size of input file
+        //stores to dimensions[vector2array] and cellSize[int]
+        let data = await getSizes(gridSize, inputFileBuffer)
+        dimensions = data.dimensions
+        cellSize = data.cellSize
+        
+    
+        //Resize the base images to the cell size of the input img
+        let textures = await resizeTextures(cellSize, gridSize)
+        stitchTextureResized = textures.stitchTextureResized
+        aidaTextureResized = textures.aidaTextureResized
+
+
+        return(['ya got it', dimensions, cellSize, stitchTextureResized])
+
+    } catch (error) {
+        console.error('Error:', error.message);
+    }
+};
+
+
+// ~~~~~~~~~~~~~~~~~~ Methods below ~~~~~~~~~~~~~~~~~~
+
+
+const getSizes = (gridSize, inputFile) => {
+    //get pixelart file (alpha on empty)
+    //get pixelart dimensions
+
+    let sizes = {
+        dimensions: [],
+        cellSize: 0
+    }
+
+    return new Promise((resolve,reject) => {
+        gm(inputFile)
+        .size(function (err, size) {
+            if (!err) {
+                sizes.dimensions.push(size.width)
+                sizes.dimensions.push(size.height)
+                //get cell size
+                sizes.cellSize = sizes.dimensions[0] / gridSize[0]
+    
+                //console.log('inner', sizes)
+    
+                resolve(sizes)
+            } else {
+                console.error(err);
+            }
+        })
+    });
+
+}
+
+//TODO: toBuffer doesnt work in nodegm, just switch to JIMP instead
+
+const resizeTextures = async (cellSize, gridSize) => {
+    let stitchTextureResized, aidaTextureResized
+
+    stitchTextureResized = gm('textureMain.jpg')
+    .resize(cellSize)
+    .toBuffer('JPEG', (err, buffer) => {
+        if (err) {
+          console.error('Error in the first operation:', err);
+          return;
+        }
+        
+        let g = gm(buffer);
+
+        for (let x = 1; x<gridSize[0] ;x++) {
+            g.append(buffer, true);
+        }
+    
+        g.write('temp/NEW.png', function(err) {
+            if(!err) {
+                console.log("Written montage row.");
+            } else {
+                console.log(err)
+            }
+        });
+    })
+
+    
+
+    // .toBuffer('jpeg', (err, buffer) => {
+    //     stitchTextureResized = buffer
+    //     if (err) {
+    //         console.error(err);
+    //     }
+    // })
 
     //set size of texture to cell size
-    gm('temp/texture1.jpg')
-        .resize(cellSize)
-        .write('temp/textureBase.png', function(err) {
-            if(!err) {
-                console.log("Written texture base.");
-                textureRow();
-            }
-        });
-    
-        gm('temp/aida-base.jpg')
-        .resize(cellSize)
-        .write('temp/aida-base.png', function(err) {
-            if(!err) {
-                console.log("Written aida base.");
-            }
-        });
-} else {
-    console.error(err);
-}
-});
+    // await new Promise((resolve,reject) => {
+    //     gm('textureMain.jpg')
+    //         .resize(cellSize)
+    //         .toBuffer('png', (err, buffer) => {
+    //             stitchTextureResized = buffer
+    //             if (err) {
+    //                 console.error(err);
+    //             }
+    //             resolve()
+    //         })
+    // })
+
+    // await new Promise((resolve,reject) => {
+    //     gm('aida-base.jpg')
+    //         .resize(cellSize)
+    //         .toBuffer('png', (err, buffer) => {
+    //             aidaTextureResized = buffer
+    //             if (err) {
+    //                 console.error(err);
+    //             }
+    //             resolve()
+    //         });
+    // })
+
+     return ({stitchTextureResized, g})
+};
+
 
 //draw row of x stitch texture
 const textureRow = () => {
@@ -61,6 +161,7 @@ const textureRow = () => {
     });
 };
 
+
 //draw full image of x stitch texture using rows above
 const textureFull = () => {
     let r = gm('temp/montagerow.png');
@@ -77,6 +178,7 @@ const textureFull = () => {
         else{console.log(err)}
     });
 }
+
 
 //overlay texture over file, cut out alpha from original file
 const composeTogether = () => {
@@ -138,6 +240,7 @@ const aidaRow = () => {
     });
 };
 
+
 const aidaFull = () => {
     let r = gm('temp/aida-row.png');
 
@@ -193,6 +296,7 @@ const aidaFull = () => {
     });
 }
 
+
 const composeAida = () => { //get background and foreground img, center in background and composite together into single img
     let background = 'temp/colorBgAida.png'
     let foreground = 'temp/foreground.png'
@@ -210,9 +314,5 @@ const composeAida = () => { //get background and foreground img, center in backg
         });
 }
 
-//EXTENSION
-//build AIDA background based on pixel art dimensions
-//get dimensions
-//build image of tiled AIDA texture
-//save final file
 
+module.exports = { textureImg }
